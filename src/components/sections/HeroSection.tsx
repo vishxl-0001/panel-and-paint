@@ -2,21 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { useContent } from '@/context/ContentContext';
-import { CarCanvas } from '@/components/3d/CarCanvas';
 import { PaintSwitcher } from '@/components/3d/PaintSwitcher';
 import { FallbackShowcase } from '@/components/3d/FallbackShowcase';
-import { isLowEndDevice, getTelUrl, getWhatsAppUrl } from '@/lib/utils';
+import { isLowEndDevice, getTelUrl } from '@/lib/utils';
 import {
   Phone,
-  MessageSquare,
   ArrowRight,
   ShieldCheck,
   Star,
-  Sparkles,
   Zap,
+  Loader2,
 } from 'lucide-react';
+
+// Dynamic import of 3D Canvas with SSR disabled to prevent server-side WebGL errors on Vercel
+const CarCanvas = dynamic(
+  () => import('@/components/3d/CarCanvas').then((mod) => mod.CarCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-brand-accent animate-spin opacity-40" />
+      </div>
+    ),
+  }
+);
 
 export function HeroSection() {
   const { settings } = useContent();

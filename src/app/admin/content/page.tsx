@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useContent } from '@/context/ContentContext';
 import { FileEdit, Save, Sparkles, CheckCircle2, Megaphone, Eye } from 'lucide-react';
 
-export function SiteContentEditorPage() {
+function SiteContentEditorPage() {
   const { settings, updateSettings } = useContent();
   const [formData, setFormData] = useState({
     heroHeadline: settings.heroHeadline,
