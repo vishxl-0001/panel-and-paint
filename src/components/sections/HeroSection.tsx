@@ -1,61 +1,38 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useContent } from '@/context/ContentContext';
-import { PaintSwitcher } from '@/components/3d/PaintSwitcher';
-import { FallbackShowcase } from '@/components/3d/FallbackShowcase';
-import { isLowEndDevice, getTelUrl } from '@/lib/utils';
+import { getTelUrl } from '@/lib/utils';
 import {
   Phone,
   ArrowRight,
   ShieldCheck,
   Star,
   Zap,
-  Loader2,
+  Sparkles,
+  Award,
+  CheckCircle2,
 } from 'lucide-react';
-
-// Dynamic import of 3D Canvas with SSR disabled to prevent server-side WebGL errors on Vercel
-const CarCanvas = dynamic(
-  () => import('@/components/3d/CarCanvas').then((mod) => mod.CarCanvas),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-full flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-brand-accent animate-spin opacity-40" />
-      </div>
-    ),
-  }
-);
 
 export function HeroSection() {
   const { settings } = useContent();
-  const [paintColor, setPaintColor] = useState<string>('#111318'); // Default Phantom Obsidian
-  const [useFallback, setUseFallback] = useState<boolean>(false);
-  const [mounted, setMounted] = useState<boolean>(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (isLowEndDevice()) {
-      setUseFallback(true);
-    }
-  }, []);
 
   return (
-    <section className="relative min-h-[100dvh] w-full flex flex-col justify-between overflow-hidden bg-brand-dark pt-4 sm:pt-8 pb-12">
-      {/* Background Radial Glow */}
+    <section className="relative min-h-[90dvh] lg:min-h-[92dvh] w-full flex flex-col justify-between overflow-hidden bg-brand-dark pt-6 sm:pt-10 pb-16">
+      {/* Background Radial Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] rounded-full bg-brand-accent/15 blur-[120px] pointer-events-none" />
       <div className="absolute -top-10 left-10 w-72 h-72 rounded-full bg-orange-600/10 blur-[100px] pointer-events-none" />
 
       {/* Main Content Container */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center py-6 sm:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           
           {/* Left Column: Headline, Trust Signals & CTAs */}
           <div className="lg:col-span-6 z-10 text-center lg:text-left space-y-5 sm:space-y-6">
             {/* Top Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-card/90 border border-brand-border/80 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-card/90 border border-brand-border/80 shadow-sm">
               <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-xs font-semibold text-brand-silver">
                 Rotorua&apos;s Trusted Panel & Spray Specialists
@@ -122,26 +99,65 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column: 3D Interactive Car Scene or Fallback Showcase */}
+          {/* Right Column: Premium Workshop Showcase */}
           <div className="lg:col-span-6 flex flex-col items-center justify-center relative w-full">
-            <div className="w-full h-[320px] xs:h-[360px] sm:h-[450px] lg:h-[480px] relative">
-              {mounted && (
-                useFallback ? (
-                  <FallbackShowcase color={paintColor} />
-                ) : (
-                  <CarCanvas color={paintColor} />
-                )
-              )}
-            </div>
+            <div className="relative w-full max-w-lg rounded-3xl overflow-hidden border border-brand-border/80 bg-gradient-to-b from-brand-card to-brand-dark shadow-2xl group">
+              {/* Real Workshop Photo */}
+              <div className="relative w-full h-[280px] sm:h-[380px] overflow-hidden bg-brand-dark">
+                <Image
+                  src="/images/ute-paint-booth.png"
+                  alt="Ngongotaha Panel & Paint - Custom Spray Booth Finish"
+                  fill
+                  priority
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                
+                {/* Gradient vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-transparent to-black/20" />
+                
+                {/* Real Workshop Badge */}
+                <div className="absolute top-4 left-4 bg-brand-dark/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-brand-accent/40 flex items-center gap-1.5 shadow-lg">
+                  <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
+                  <span className="text-[11px] font-bold text-white uppercase tracking-wider">
+                    Real Workshop Spray Booth
+                  </span>
+                </div>
 
-            {/* Interactive Paint Switcher Bar */}
-            <div className="w-full flex justify-center -mt-6 sm:-mt-8 z-20 px-2">
-              <PaintSwitcher
-                selectedColor={paintColor}
-                onSelectColor={(hex) => setPaintColor(hex)}
-              />
+                {/* Rating Badge */}
+                <div className="absolute top-4 right-4 bg-brand-dark/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1 shadow-lg">
+                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                  <span className="text-xs font-bold text-white">4.4 Google</span>
+                </div>
+
+                {/* Overlay Highlights */}
+                <div className="absolute bottom-4 left-4 right-4 space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-brand-accent font-semibold">
+                    Ngongotahā Workshop • 142 Oturoa Road
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-display font-bold text-white drop-shadow-md">
+                    Full Body Clearcoat & Paint Finishes
+                  </h3>
+                </div>
+              </div>
+
+              {/* Bottom Feature Bar */}
+              <div className="p-4 sm:p-5 bg-brand-card/95 border-t border-brand-border/80 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-brand-silver">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Oven-Baked Mirror Gloss</span>
+                </div>
+                <div className="flex items-center gap-2 text-brand-silver">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>UV Sun Protection</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 text-brand-silver">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>WoF Rust Certified</span>
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
